@@ -105,15 +105,18 @@ class ObjectExpressionDemo01 {
      * 3. 伴生对象
      * - 类内部的对象声明 可以用 companion 关键字标记。
      */
-
     class MyCompanion {
         companion object Factory {
             fun create(): MyCompanion = MyCompanion()
+
+            val globalCount: Int = 0
         }
     }
 
     // Tips：伴生对象的成员 可通过 只是用类名 作为限定符来调用
     val instance = MyCompanion.create()
+
+    val count = MyCompanion.globalCount
 
     // Tips：伴生对象的成员 很像其他语言的 静态成员，但运行时，仍是 真实对象的实例成员 && 可实现接口。
     interface Factory<T> {
