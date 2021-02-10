@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.sample.sunflower.GardenActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -36,8 +37,8 @@ class MainActivity : AppCompatActivity() {
         val adapter = PageAdapter()
         recyclerView.adapter = adapter
         adapter.setData(listOf<PageData>(
-            PageData("Main", MainActivity::class.java),
-            PageData("Main", MainActivity::class.java)))
+            PageData("Main", GardenActivity::class.java),
+            PageData("Garden", GardenActivity::class.java)))
     }
 
     // 扩展函数

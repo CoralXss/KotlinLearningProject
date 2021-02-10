@@ -1,17 +1,19 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'androidx.navigation.safeargs.kotlin'
 android {
     compileSdkVersion 29
     buildToolsVersion "30.0.3"
 
     // DSL element 'android.dataBinding.enabled' is obsolete and has been replaced with 'android.buildFeatures.dataBinding'.
-    buildFeatures {
+//    buildFeatures {
+//        dataBinding = true
+//    }
 
-        dataBinding = true
-
-        // for view binding:
-        // viewBinding = true
+    dataBinding {
+        enabled true
     }
 
     defaultConfig {
@@ -21,6 +23,9 @@ android {
         versionName "1.0"
 
         consumerProguardFiles 'consumer-rules.pro'
+
+        // 允许使用 <vector> 构建矢量图标，不加这句，编译会报错：File was preprocessed as vector drawable android:filltype support was added in Android 7.0 (API level 24)
+        vectorDrawables.useSupportLibrary true
     }
 
     buildTypes {
@@ -34,8 +39,19 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     implementation "androidx.appcompat:appcompat:$androidx_version"
-    implementation "androidx.core:core-ktx:$androidx_version"
+
     implementation "androidx.constraintlayout:constraintlayout:$constraint_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
+    implementation "androidx.viewpager2:viewpager2:1.0.0"
+    implementation 'com.google.android.material:material:1.2.0'
+
+    implementation "androidx.core:core-ktx:$androidx_version"
+    implementation 'androidx.fragment:fragment-ktx:1.1.0-alpha09'
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
+
+
+
 }

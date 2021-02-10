@@ -3,7 +3,8 @@
     package="com.google.sample.sunflower">
 
     <application>
-        <activity android:name=".GardenActivity"></activity>
+        <activity android:name=".GardenActivity"
+            android:theme="@style/Theme.Sunflower.NoActionBar" />
     </application>
 
 </manifest>

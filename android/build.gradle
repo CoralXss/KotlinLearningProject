@@ -31,5 +31,4 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout:$constraint_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
 
-
 }

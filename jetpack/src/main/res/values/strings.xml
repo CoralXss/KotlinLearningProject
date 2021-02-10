@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">jetpack</string>
+
+    <string name="plant_details_title">植物介绍</string>
 </resources>

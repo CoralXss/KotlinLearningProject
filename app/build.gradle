@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
-
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlin-android-extensions'
 
 android {
@@ -13,6 +13,9 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+
+        // 允许使用 <vector> 构建矢量图标
+        vectorDrawables.useSupportLibrary true
     }
     buildTypes {
         release {
@@ -20,13 +23,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    dataBinding {
+        enabled true
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    kapt 'com.android.databinding:compiler:3.1.4'
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "androidx.appcompat:appcompat:$androidx_version"
     implementation "androidx.core:core-ktx:$androidx_version"
     implementation "androidx.constraintlayout:constraintlayout:$constraint_version"
     implementation "androidx.recyclerview:recyclerview:$recyclerview_version"
+    implementation project(path: ':android')
+    api project(path: ':jetpack')
 }
