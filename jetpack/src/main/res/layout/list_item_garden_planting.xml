@@ -18,6 +18,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="16dp"
+        android:onClick="@{clickListener}"
         app:cardElevation="2dp"
         app:cardPreventCornerOverlap="false"
         app:shapeAppearance="@style/ShapeAppearance.Sunflower.Card">

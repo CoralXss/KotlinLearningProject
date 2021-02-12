@@ -66,6 +66,42 @@ TODO
 
 
 
+五、项目介绍
+
+1. 页面功能介绍
+- GardenActivity
+- HomeViewPagerFragment
+- GardenFragment
+- PlanListFragment
+- PlanDetailFragment
+- GalleryFragment
+
+2. 页面跳转
+- GardenActivity / NavHostFragment + navigation/nav_garden.xml 导航
+--- HomeViewPagerFragment -->  SunflowerAdapter ---> GardenFragment（我的花园列表） + PlanListFragment（植物目录列表）
+
+按钮切换：
+------ GardenFragment -> PlanListFragment（植物目录列表）  -- TAB 切换  （植物列表页 收藏到 我的花园列表）
+
+导航切换：/navigation/nav_garden.xml
+------ PlanListFragment -> PlanDetailFragment（植物详情） 【 HomeViewPagerFragment ->  PlanDetailFragment 】
+------ PlanDetailFragment -> GalleryFragment（植物图片列表）
+
+3. JetPack 组件案例
+
+3.1 Navigation
+1）导航文件：/navigation/nav_garden.xml
+2）导航类：
+- HomeViewPagerFragmentDirections.actionHomeViewPagerFragmentToPlantDetailFragment()   植物目录列表 -> 植物详情
+- PlantDetailFragmentDirections.actionPlantDetailFragmentToGalleryFragment()           植物详情 -> 植物图片列表
+
+3.2 ViewModel + LiveData + Lifecycle + Repository + Room
+
+
+3.3 Paging
+
+
+3.4 WorkManager
 
 
 

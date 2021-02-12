@@ -37,8 +37,9 @@ class GardenFragment : Fragment() {
         return binding.root
     }
 
+    // TODO: 2021/2/10 1）使用 Repository & LiveData 管理数据
     private fun subscribeUI(adapter: GardenPlantingAdapter, binding: FragmentGardenBinding) {
-        binding.hasPlantings = !viewModel.plantAndGardenPlantings.isEmpty()
+        binding.hasPlantings = viewModel.plantAndGardenPlantings.isNotEmpty()
 
         adapter.submitList(viewModel.plantAndGardenPlantings)
     }

@@ -19,4 +19,15 @@ data class Plant(
         since > lastWateringDate.apply { add(Calendar.DAY_OF_YEAR, wateringInterval) }
 
     override fun toString(): String = name
+
+    companion object {
+        fun testData(): List<Plant> = listOf<Plant>(
+            Plant("1",
+                "Tomato",
+                "Tomato with egg tastes Delicious !",
+                0,
+                3,
+                "https://upload.wikimedia.org/wikipedia/commons/1/17/Cherry_tomatoes_red_and_green_2009_16x9.jpg")
+        )
+    }
 }
