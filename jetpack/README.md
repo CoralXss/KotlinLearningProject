@@ -61,9 +61,40 @@ apply plugin: 'androidx.navigation.safeargs.kotlin'
 
 总结：Navigation 最基础的使用如上所示，暂因初学 kotlin，其他功能以及原理研究待花时间再学习。
 
-三、ViewModel & LiveData
-TODO
+三、ViewModel & LiveData & Lifecycle
 
+1. ViewModel 功能与使用
+ViewModel 若要看其实现，读了这篇博文，觉得非常简单：https://qingmei2.blog.csdn.net/article/details/84730135 。
+
+ViewModel 是当前架构组件其中一个，重心在于对 **数据状态的维护** 。对于 ViewModel，其主要功能点在于：
+1）保证数据不随屏幕旋转而销毁；
+2）更方便 UI 组件进行通信。
+
+问题点：
+1）如何实现页面销毁重建，依然可以保存数据？
+- 能想到最简单的方式便是「单例」，但是是应用声明周期的。
+- ViewModel 的思想，根据博文，简单来说是从 Fragment.setRetainInstance(true) 这个保持 Activity 销毁是否保留 Fragment 实例的 API 方法学来的。
+当设置为 true 时，Activity 重建，Fragment 依然会存活。如此，便可以将 ViewModel 的实例创建放在该 Fragment 进行，如此便实现了页面重建数据依然保留。
+
+2）如何在实现 UI 组件之间的相互通信？
+- ViewModel 的实例获取 API 调用如下：
+```
+XxxViewModel model = ViewModelProviders.of(getActivity()).get(XxxViewModel.class)
+```
+如何两个 Fragment 的宿主 Activity 是同一个，则通过上述方法可知，获取的是同一个 ViewModel 实例，意味着数据可以进行共享。
+假设不可见 && setRetainInstance(true) 的 Fragment 为 HolderFragment，即使 Activity 重建，FragmentManager 中取出的还是之前的实例，如此在 HolderFragment 中创建的引用都还存在。
+
+HolderFragment 中持有 `ViewModelStore` 容器的引用，该容器主要是存储该 Activity 组件下所支持的所有 ViewModel，根据 ViewModel.class 从容器 Map 中取值，存在就返回，不存在就创建。
+如此便保证了同一宿主 Activity 下不同 Fragment 可通过获取同一 ViewModel 进行通信。
+
+备注：
+```
+// 是 Java 库，里面一共 6个文件，当然还涉及到其他底层库的封装，最顶层暴露的 API 来自该库。
+"androidx.lifecycle:lifecycle-viewmodel:2.2.0"
+
+// 为 Kotlin 库，猜测类似以 "-ktx" 结尾的库都是原始库的扩展方法库，在不改变原 API 的基础上，对其进行扩展。
+implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+```
 
 
 五、项目介绍
@@ -87,6 +118,7 @@ TODO
 ------ PlanListFragment -> PlanDetailFragment（植物详情） 【 HomeViewPagerFragment ->  PlanDetailFragment 】
 ------ PlanDetailFragment -> GalleryFragment（植物图片列表）
 
+
 3. JetPack 组件案例
 
 3.1 Navigation
@@ -102,6 +134,9 @@ TODO
 
 
 3.4 WorkManager
+
+
+3.5 Room
 
 
 
