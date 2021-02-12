@@ -70,7 +70,7 @@ ViewModel 是当前架构组件其中一个，重心在于对 **数据状态的�
 1）保证数据不随屏幕旋转而销毁；
 2）更方便 UI 组件进行通信。
 
-问题点：
+相关问题点：
 1）如何实现页面销毁重建，依然可以保存数据？
 - 能想到最简单的方式便是「单例」，但是是应用声明周期的。
 - ViewModel 的思想，根据博文，简单来说是从 Fragment.setRetainInstance(true) 这个保持 Activity 销毁是否保留 Fragment 实例的 API 方法学来的。
@@ -95,6 +95,46 @@ HolderFragment 中持有 `ViewModelStore` 容器的引用，该容器主要是�
 // 为 Kotlin 库，猜测类似以 "-ktx" 结尾的库都是原始库的扩展方法库，在不改变原 API 的基础上，对其进行扩展。
 implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
 ```
+
+2、LiveData
+
+博文：https://qingmei2.blog.csdn.net/article/details/85316254
+
+1）作用：数据改变时更新 UI（响应时、数据驱动视图）。本质：观察者模式
+2）LiveData vs RxJava
+- 更轻量，但没有链式调用及相关操作符。
+- 可避免内存泄露。RxJava 需要借助三方库 RxLifecycle、AutoDispose 来解决。
+3）API 调用：
+- observer() 方法：必须主线程监听，数据更新后回调有两种方式，但最终回调一定是主线程。页面非活跃状态时，不会通知数据更新。
+- observerForever() 方法：允许页面再后台非活跃状态时，依然可以更新视图。
+
+相关问题点：
+1）LiveData 如何避免内存泄露？
+- 借助 Lifecycle 监听 Activity 生命周期变化，若 destroyed 了，则自动取消订阅。
+
+2）数据更新后，如何通知到回调方法？
+- LiveData 提供了两种通知数据更新的方法：setValue() 和 postValue() 。前者必须在主线程调用，后者则可以在子线程调用，适合耗时任务。
+但最终都会 触发观察者并更新 UI。对于 postValue() 这种，更新 UI 是借助 Handler 实现的。
+
+3）LiveData 数据变更了，一定会收到刷新通知？
+- 并不是。当通过 observer() 方法监听时，只有页面处于活跃状态才会通知，也即是 onStart\onResume\onPause 这三个生命周期内，才会监听到，不活跃，源码直接 return 了。
+如果想页面位于后台也可以监听，则使用 observerForever() 进行监听，可在整个生命周期内收到数据更新通知。
+
+备注：
+```
+// 源码文件也比较少
+"androidx.lifecycle:lifecycle-livedata:2.2.0"
+"androidx.lifecycle:lifecycle-livedata-core:2.2.0"
+
+implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
+implementation "androidx.lifecycle:lifecycle-livedata-core-ktx:2.2.0"
+```
+
+*Tips: ViewModel & LiveData 实现均依赖于 Lifecycle 。整体实现比较复杂。*
+
+3. Lifecycle
+
+
 
 
 五、项目介绍
