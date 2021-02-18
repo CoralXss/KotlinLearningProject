@@ -13,4 +13,10 @@ Kotlin DOC
 - 第三章：类与对象
 - 第四章：函数与 Lambda 表达式
 - 第五章：集合
+
 - 第六章：协议
+```
+// Android 中使用协程，需要添加依赖如下：
+implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2"
+implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2"
+```

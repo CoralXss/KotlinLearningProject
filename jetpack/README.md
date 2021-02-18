@@ -45,6 +45,8 @@ apply plugin: 'androidx.navigation.safeargs.kotlin'
 - app:navGraph	存放的是第二步建好导航的资源文件，也就是确定了Navigation Graph
 - app:defaultNavHost="true"	与系统的返回按钮相关联
 
+备注：NavHostFragment 作为 **导航界面的容器**。Activity 中展示的这一系列 Fragment，实际均是由其控制展示。
+
 4. 界面跳转、参数传递以及动画。两种方式实现：
 - 参数传递：
 1）使用 `SafeArgs` 插件，传递参数 args 会在 nav.xml 中声明，接收时使用 safeArgs 获取；

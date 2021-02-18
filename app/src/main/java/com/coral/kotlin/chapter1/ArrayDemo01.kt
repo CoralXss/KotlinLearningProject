@@ -20,7 +20,7 @@ class ArrayDemo01 {
 
             // 使用构造函数构建数字 lambda 表达式
             val arr = Array(5) { i -> (i * i).toString() }
-            arr.forEach { println(it) }
+//            arr.forEach { println(it) }
 
             // 3. 取元素值
             val item1: String = arr[1]
