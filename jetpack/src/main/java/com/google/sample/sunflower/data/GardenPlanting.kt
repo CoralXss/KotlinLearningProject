@@ -5,7 +5,9 @@ import java.util.*
 
 @Entity(
     tableName = "garden_plantings",
-    foreignKeys = [ForeignKey(entity = Plant::class, parentColumns = ["id"], childColumns = ["plant_id"])],
+    foreignKeys = [
+        ForeignKey(entity = Plant::class, parentColumns = ["id"], childColumns = ["plant_id"])
+    ],
     indices = [Index("plant_id")]
 )
 data class GardenPlanting(
@@ -21,7 +23,6 @@ data class GardenPlanting(
 ) {
 
     @PrimaryKey(autoGenerate = true)
-
     @ColumnInfo(name = "id")
     var gardenPlantingId: Long = 0
 }

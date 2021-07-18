@@ -1,28 +1,26 @@
 package com.google.sample.sunflower.repository
 
+import androidx.room.*
 import com.google.sample.sunflower.data.GardenPlanting
 import com.google.sample.sunflower.data.PlantAndGardenPlantings
 import kotlinx.coroutines.flow.Flow
 
-class GardenPlantingDao {
+@Dao
+interface GardenPlantingDao {
 
-    fun getGardenPlantings(): Flow<List<GardenPlanting>> {
-        TODO()
-    }
+    @Query("select * from garden_plantings")
+    fun getGardenPlantings(): Flow<List<GardenPlanting>>
 
-    fun isPlanted(plantId: String): Flow<Boolean> {
-        TODO()
-    }
+    @Query("select exists(select 1 from garden_plantings where plant_id = :plantId limit 1)")
+    fun isPlanted(plantId: String): Flow<Boolean>
 
-    fun getPlantedGardens(): Flow<List<PlantAndGardenPlantings>> {
-        TODO()
-    }
+    @Transaction
+    @Query("select * from plants where id in (select distinct(plant_id) from garden_plantings)")
+    fun getPlantedGardens(): Flow<List<PlantAndGardenPlantings>>
 
-    suspend fun insertGardenPlanting(gardenPlanting: GardenPlanting): Long {
-        TODO()
-    }
+    @Insert
+    suspend fun insertGardenPlanting(gardenPlanting: GardenPlanting): Long
 
-    suspend fun deleteGardenPlanting(gardenPlanting: GardenPlanting) {
-        TODO()
-    }
+    @Delete
+    suspend fun deleteGardenPlanting(gardenPlanting: GardenPlanting)
 }

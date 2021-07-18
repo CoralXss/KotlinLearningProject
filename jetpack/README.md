@@ -22,6 +22,8 @@ Architecture 系列：
 简化 Android 导航的库和插件。用来管理 Fragment 的切换。
 单 Activity 管理多个 Fragment，页面的切换由 Fragment 切换完成，而不是多 Activity 页面切换。
 
+简言之：单容器，多组件。
+
 集成步骤：
 1. 添加模块依赖：
 ```
@@ -64,6 +66,16 @@ apply plugin: 'androidx.navigation.safeargs.kotlin'
 总结：Navigation 最基础的使用如上所示，暂因初学 kotlin，其他功能以及原理研究待花时间再学习。
 
 三、ViewModel & LiveData & Lifecycle
+
+官网使用：https://developer.android.com/codelabs/kotlin-android-training-view-model?index=..%2F..android-kotlin-fundamentals&hl=zh-cn#4
+
+For comparison, here's how the GameFragment UI data is handled in the starter app before you add ViewModel, and after you add ViewModel:
+
+Before you add ViewModel: When the app goes through a configuration change such as a screen rotation, the game fragment is destroyed and re-created. The data is lost.
+After you add ViewModel and move the game fragment's UI data into the ViewModel: All the data that the fragment needs to display is now the ViewModel. When the app goes through a configuration change, the ViewModel survives, and the data is retained.
+
+使用 ViewModel 之前，页面配置变化，如屏幕旋转，fragment 销毁重建了，数据也丢失了。
+使用 ViewModel 之后并且把 UI 数据交由其处理，当屏幕旋转，ViewModel 还存在，所以数据也保留在。
 
 1. ViewModel 功能与使用
 ViewModel 若要看其实现，读了这篇博文，觉得非常简单：https://qingmei2.blog.csdn.net/article/details/84730135 。

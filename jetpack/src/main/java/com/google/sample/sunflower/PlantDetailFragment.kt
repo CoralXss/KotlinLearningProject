@@ -10,7 +10,9 @@ import androidx.core.app.ShareCompat
 import androidx.core.widget.NestedScrollView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
 import com.google.sample.sunflower.data.Plant
@@ -20,13 +22,17 @@ import kotlinx.android.synthetic.main.fragment_plant_detail.*
 
 class PlantDetailFragment : Fragment() {
 
-    private val plantDetailViewModel = PlantDetailViewModel()
+    private val args: PlantDetailFragmentArgs by navArgs()
+
+    private lateinit var plantDetailViewModel: PlantDetailViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        plantDetailViewModel = PlantDetailViewModel.create(this, args.plantId)
+
         val binding = DataBindingUtil.inflate<FragmentPlantDetailBinding>(
             inflater,
             R.layout.fragment_plant_detail,
@@ -34,6 +40,18 @@ class PlantDetailFragment : Fragment() {
             false
         ).apply {
             viewModel = plantDetailViewModel
+            lifecycleOwner = viewLifecycleOwner
+
+            // dataBinding
+            callback = object : Callback {
+                override fun add(plant: Plant?) {
+                    plant?.let {
+                        hideAppbarFab(fab)
+                        plantDetailViewModel.addPlantToGarden()
+                        Snackbar.make(root, "添加了新植物", Snackbar.LENGTH_LONG).show()
+                    }
+                }
+            }
         }
 
         binding.galleryNav.setImageResource(R.drawable.ic_photo_library)
@@ -70,9 +88,13 @@ class PlantDetailFragment : Fragment() {
             }
         })
 
+        binding.toolbar.setNavigationOnClickListener { view ->
+            view.findNavController().navigateUp()
+        }
         binding.toolbar.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.action_share -> {
+                    createShareIntent()
                     true
                 }
                 else -> false
@@ -88,14 +110,14 @@ class PlantDetailFragment : Fragment() {
     }
 
     private fun navigateToGallery() {
-        plantDetailViewModel.plant.let { plant ->
+        plantDetailViewModel.plant.value?.let { plant ->
             val direction = PlantDetailFragmentDirections.actionPlantDetailFragmentToGalleryFragment(plant.name)
             findNavController().navigate(direction)
         }
     }
 
     private fun createShareIntent() {
-        val shareText = plantDetailViewModel.plant.let { plant ->
+        val shareText = plantDetailViewModel.plant.value.let { plant ->
             if (plant == null) {
                 ""
             } else {
@@ -112,7 +134,7 @@ class PlantDetailFragment : Fragment() {
     }
 
     // 函数式 SAM 接口
-//    interface Callback {
-//        fun add(plant: Plant?)
-//    }
+    interface Callback {
+        fun add(plant: Plant?)
+    }
 }

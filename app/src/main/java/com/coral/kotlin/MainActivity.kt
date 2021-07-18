@@ -1,9 +1,14 @@
 package com.coral.kotlin
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import android.util.Log
 import android.view.Gravity
 import android.view.View
@@ -20,6 +25,60 @@ class MainActivity : AppCompatActivity() {
 
     val TAG = "MainActivity"
 
+    // 2.1 是否展示省电优化设置入口
+    fun batteryOptimizationsVisible() = Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+
+    // 2.2 检测是否在省电优化白名单 API 23 6.0（状态监测）
+    fun isBatteryOptimizationsIgnored(context: Context): Boolean {
+        if (batteryOptimizationsVisible()) {
+            var isIgnoring = false
+            val powerManager: PowerManager = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+            if (powerManager != null) {
+                isIgnoring = powerManager.isIgnoringBatteryOptimizations(context.packageName)
+                Log.e("bbb", "ignore = $isIgnoring")
+            }
+            return isIgnoring
+        }
+        return true
+    }
+
+    val REQUEST_CODE_BATTERY_OPTIMIZE = 0x11
+
+    /**
+     * 2. 申请加入电池优化白名单（注：要添加权限 android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS />）
+     */
+    fun requestIgnoreBatteryOptimizations(context: Context) {
+        if (batteryOptimizationsVisible()) {
+            try {
+                val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS)
+                intent.data = Uri.parse("package:" + context.packageName)
+                (context as Activity).startActivityForResult(intent, REQUEST_CODE_BATTERY_OPTIMIZE)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        // 更新电池优化的开启状态
+        if (requestCode == REQUEST_CODE_BATTERY_OPTIMIZE) {
+            btn_battery_optim.postDelayed({
+                val result = isBatteryOptimizationsIgnored(this)
+                val s = if (result) "已允许" else "未允许"
+                Log.e("Battery", s);
+
+                Toast.makeText(this, s, Toast.LENGTH_SHORT).show()
+
+            }, 1000)
+
+//            val result = isBatteryOptimizationsIgnored(this)
+//            val s = if (result) "已允许" else "未允许"
+//            Log.e("Battery", s);
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -28,6 +87,14 @@ class MainActivity : AppCompatActivity() {
         btn_click.text = "我是使用 Kotlin 改变的按钮"
         btn_click.setOnClickListener {
             toast(this, "Main Page setOnClickListener")
+        }
+
+        btn_battery_optim.setOnClickListener {
+            if (isBatteryOptimizationsIgnored(this)) {
+                Log.e("Battery", "已允许");
+            } else {
+                requestIgnoreBatteryOptimizations(this)
+            }
         }
 
         val people = People("Coral")

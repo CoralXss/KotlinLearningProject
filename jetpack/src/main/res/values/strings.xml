@@ -8,4 +8,8 @@
         <item quantity="other" translation_description="Suffix for the text describing how often a plant should be watered, plural. Used in combination with watering_needs_prefix: 'Watering needs: every 8 days'.">every %d days</item>
     </plurals>
 
+    <plurals name="watering_next">
+        <item quantity="other">%d 天后浇水</item>
+    </plurals>
+
 </resources>

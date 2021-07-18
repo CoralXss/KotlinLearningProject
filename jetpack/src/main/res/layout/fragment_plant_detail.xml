@@ -10,7 +10,9 @@
             name="viewModel"
             type="com.google.sample.sunflower.viewmodels.PlantDetailViewModel" />
 
-
+        <variable
+            name="callback"
+            type="com.google.sample.sunflower.PlantDetailFragment.Callback" />
     </data>
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
